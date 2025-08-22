@@ -118,7 +118,7 @@ function FinancialDashboard() {
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen p-4 sm:p-6 md:p-8">
+        <div className="bg-gray-100/95 min-h-screen w-[90vw] rounded-xl p-4 sm:p-6 md:p-8">
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2">Credit Score Dashboard</h1>
                 <p className="text-gray-600 mb-6">Enter Yahoo Finance tickers to get their financial health rating.</p>
