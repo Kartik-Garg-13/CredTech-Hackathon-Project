@@ -1,6 +1,11 @@
-# CredTech-Hackathon-Project
+### CredTech-Hackathon-Project
+# Run in local device
+go to CredTech-Hackathon-Project/backend
+```bash
+cd backend
+```
 
-go to CredTech-Hackathon-Project and run this
+and run this
 ```bash
 uvicorn stock_credit_analyzer:app --reload
 ```
@@ -9,6 +14,7 @@ and in a different terminal go here
 ```bash
 cd frontend
 ```
+
 and run the frontend in local device
 ```bash
 npm run dev
