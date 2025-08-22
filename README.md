@@ -1,5 +1,5 @@
-### CredTech-Hackathon-Project
-# Run in local device
+## CredTech-Hackathon-Project
+### Run in local device
 go to CredTech-Hackathon-Project/backend
 ```bash
 cd backend
