@@ -82,7 +82,7 @@ const ScoreCard = ({ data }) => {
 
 // --- Main Dashboard Component ---
 function FinancialDashboard() {
-    const [tickerInput, setTickerInput] = useState("RELIANCE, TCS, TATAMOTORS");
+    const [tickerInput, setTickerInput] = useState("RELIANCE.NS, TCS.NS, TATAMOTORS.NS");
     const [scores, setScores] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -91,32 +91,11 @@ function FinancialDashboard() {
         setIsLoading(true);
         setError(null);
         setScores([]);
-
-        // --- FIX IS HERE ---
-        // 1. Split the input string into individual tickers.
-        // 2. For each ticker, trim whitespace and convert to uppercase.
-        // 3. Check if it already ends with '.NS'. If not, append it.
-        // 4. Filter out any empty strings that might result from extra commas.
-        const symbols = tickerInput
-            .split(',')
-            .map(s => {
-                const trimmed = s.trim().toUpperCase();
-                if (trimmed && !trimmed.endsWith('.NS')) {
-                    return `${trimmed}.NS`;
-                }
-                return trimmed;
-            })
-            .filter(s => s); // Filter out empty strings
-
-        if (symbols.length === 0) {
-            setError("Please enter at least one valid stock ticker.");
-            setIsLoading(false);
-            return;
-        }
+        const symbols = tickerInput.split(',').map(s => s.trim()).filter(s => s);
 
         try {
             // Replace with your actual backend URL
-            const response = await fetch('http://127.0.0.1:8000/api/get-scores', {
+            const response = await fetch('http://127.0.0.1:8000/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ symbols }),
@@ -127,7 +106,8 @@ function FinancialDashboard() {
             }
 
             const data = await response.json();
-            setScores(data.scores);
+            // FIX: Changed data.scores to data.analysis_results to match the backend
+            setScores(data.analysis_results);
 
         } catch (e) {
             setError("Failed to fetch scores. Please ensure the backend server is running and the tickers are valid.");
@@ -141,7 +121,7 @@ function FinancialDashboard() {
         <div className="bg-gray-100 min-h-screen p-4 sm:p-6 md:p-8">
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2">Credit Score Dashboard</h1>
-                <p className="text-gray-600 mb-6">Enter Indian stock tickers (e.g., RELIANCE, TCS) to get their financial health rating.</p>
+                <p className="text-gray-600 mb-6">Enter Yahoo Finance tickers to get their financial health rating.</p>
 
                 {/* --- Input Section --- */}
                 <div className="bg-white p-4 rounded-lg shadow-md mb-8">
@@ -149,7 +129,7 @@ function FinancialDashboard() {
                         value={tickerInput}
                         onChange={(e) => setTickerInput(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="Enter stock tickers, separated by commas (e.g., RELIANCE, TCS)"
+                        placeholder="Enter stock tickers, separated by commas (e.g., RELIANCE.NS, TCS.NS)"
                         rows="3"
                     />
                     <button 
@@ -165,7 +145,7 @@ function FinancialDashboard() {
                 {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md" role="alert">{error}</div>}
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-                    {scores.map((scoreData, index) => (
+                    {scores && scores.map((scoreData, index) => (
                         <ScoreCard key={scoreData.Yahoo_Ticker || index} data={scoreData} />
                     ))}
                 </div>
